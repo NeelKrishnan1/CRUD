@@ -1,0 +1,138 @@
+import React, { useEffect, useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import FilledInput from '@mui/material/FilledInput';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
+import { Button } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+
+const Product = () => {
+  const Titlehandelchange = (event) => {
+    setTitle(event.target.value);
+  };
+  const Deshandelchange = (event) => {
+    setDesscription(event.target.value);
+  };
+  const Subhandelchange = (event) => {
+    setSubject(event.target.value);
+  };
+  const [open, setOpen] = React.useState(false);
+  const [Title, setTitle] = React.useState('');
+  const [Description, setDesscription] = React.useState('');
+  const [Subject, setSubject] = React.useState('');
+  const [Fields, setFields] = React.useState([]);
+  const [Index, setIndex] = React.useState(null);
+
+  const save = () => {
+    const items = [...Fields, { title: Title, description: Description, subject: Subject }];
+    setFields(items);
+    if (Index !== null) {
+      const arr = [...Fields];
+      arr[Index].title = Title;
+      arr[Index].description = Description;
+      arr[Index].subject = Subject;
+      setFields([...Fields]);
+      setIndex(null);
+    }
+
+    setOpen(false);
+  };
+  const deleteItem = (index) => {
+    const arr = [...Fields];
+    arr.splice(index, 1);
+    setFields([...arr]);
+  };
+  const editItem = (index) => {
+    setOpen(true);
+    const arr = [...Fields];
+    setTitle(arr[index].title);
+    setDesscription(arr[index].description);
+    setDesscription(arr[index].subject);
+    setIndex(index);
+  };
+  const handleClickOpen = () => {
+    setTitle('');
+    setDesscription('');
+    setSubject('');
+    setOpen(false);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Box>
+        <Grid container style={{ alignItems: 'center' }} spacing={3}>
+          <Grid item xs={4}>
+            <Box sx={{ bgcolor: '#cfe8fc', height: '200vh', width: '220vh' }}>
+              <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FilledInput
+                  id="filled-adornment-weight"
+                  startAdornment={<InputAdornment position="start">Add Board</InputAdornment>}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Button onClick={handleClickOpen}>Add</Button>
+                    </InputAdornment>
+                  }
+                  aria-describedby="filled-weight-helper-text"
+                  inputProps={{
+                    'aria-label': 'add',
+                  }}
+                />
+              </FormControl>
+              <Grid container spacing={2}>
+                {Fields.map((item, index) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Box sx={{ bgcolor: 'white', height: '40vh', width: '25vh', border: '1px solid black', marginLeft: '30px' }}>
+                      <h4>Title: {item.title}</h4>
+                      <h4>Subject: {item.subject}</h4>
+                      <h4>Description: {item.description}</h4>
+                      <Button onClick={() => editItem(index)}>Edit</Button>
+                      <Button onClick={() => deleteItem(index)}>Delete</Button>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">New Board</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', '& .MuiTextField-root': { width: '25ch' } }}>
+            <Grid container spacing={3}>
+              <Grid item xs={8}>
+                <TextField id="outlined-basic" label="Title" value={Title} variant="outlined" onChange={Titlehandelchange} />
+              </Grid>
+              <Grid item xs={8}>
+                <TextField id="outlined-basic" label="Subject" variant="outlined" onChange={Subhandelchange} />
+              </Grid>
+              <Grid item xs={8}>
+                <TextField id="outlined-basic" label="Description" variant="outlined" onChange={Deshandelchange} />
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={save}>Add</Button>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+export default Product;
